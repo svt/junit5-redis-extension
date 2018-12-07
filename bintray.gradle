@@ -1,0 +1,16 @@
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
+    publications = ['publishjob']
+    pkg {
+        repo = 'opensource'
+        name = 'junit5-redis-extension'
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/SVT/junit5-redis-extension'
+        userOrg = 'svt'
+
+        version {
+            name = scmVersion.version
+        }
+    }
+}
