@@ -17,7 +17,7 @@ Add to build.gradle
 testImplementation 'se.svt.oss.junit5:junit5-redis-extension:X.Y.Z
 ```
 
-A standard junit5 extension that will start an embedded Redis server on test before all tests in a class is run and shut it down after all tests run.
+A standard junit5 extension that will start an embedded Redis server on test before all tests in a class is run and shut it down after all tests are run.
 
 Example on usage in test
 ```
@@ -30,11 +30,7 @@ Example on usage in test
 )
 @ActiveProfiles("test")
 @SpringBootTest
-@ContextConfiguration(initializers = [(RandomPortInitializer::class)])
 class SomeIntegrationTest {
-
-    @Value("\${random-port.port1}")
-    var myRandomPort: Int = 0
 
     @Test
     fun blabla....
