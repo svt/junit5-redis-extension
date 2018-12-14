@@ -15,14 +15,7 @@ gradlew.bat
 schema
 
 .idea/*
-!.idea/vcs.xml
-!.idea/codeStyleSettings.xml
-!.idea/encodings.xml
-!.idea/sqldialects.xml
-!.idea/compiler.xml
 
-src/test/apt-test/
-src/main/apt
 
 *.un
 *.un~

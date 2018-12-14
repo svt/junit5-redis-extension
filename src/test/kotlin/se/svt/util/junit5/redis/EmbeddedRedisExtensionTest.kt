@@ -55,13 +55,17 @@ class EmbeddedRedisExtensionTest {
     }
 
     private fun pingRedis(redisUri: URI) {
-        var jedis: Jedis? = null
-        try {
-            jedis = Jedis(redisUri.host, redisUri.port)
+        Jedis(redisUri.host, redisUri.port).use { jedis ->
             jedis.ping()
-        } finally {
-            jedis?.close()
         }
+
+//        var jedis: Jedis? = null
+//        try {
+//            jedis = Jedis(redisUri.host, redisUri.port)
+//            jedis.ping()
+//        } finally {
+//            jedis?.close()
+//        }
     }
 
     private fun assertRedisUriSet(): URI {

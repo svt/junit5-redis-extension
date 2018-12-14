@@ -2,13 +2,14 @@
 
 **Description**:  A JUnit5 extension to setup embedded Redis for tests.
 
-  - **Technology stack**: Kotlin, Spring 5, Embedded Redis
+  - **Technology stack**: Kotlin, Junit 5, Embedded Redis
   - **Status**:  1.0
   
 ## Dependencies
 
-Spring 5
+Junit 5
 Embedded Redis - https://github.com/ozimov/embedded-redis
+FreePortFinder - https://github.com/alexpanov/freeportfinder
 
 ## Usage
 
@@ -17,23 +18,22 @@ Add to build.gradle
 testImplementation 'se.svt.oss.junit5:junit5-redis-extension:X.Y.Z
 ```
 
-A standard junit5 extension that will start an embedded Redis server on test before all tests in a class is run and shut it down after all tests are run.
+A standard junit5 extension that will start an embedded Redis server on a random port before all tests in a class
+ is run and shut it down after all tests are run. System property `redis.uri` will be set to hold the uri to the 
+ redis server, ie `redis://localhost:xyz`.
 
 Example on usage in test
 ```
 
 
-@ExtendWith(
-    value = [
-        SpringExtension::class,
-        EmbeddedRedisExtension::class]
-)
-@ActiveProfiles("test")
-@SpringBootTest
+@ExtendWith(EmbeddedRedisExtension::class)
 class SomeIntegrationTest {
 
     @Test
-    fun blabla....
+    fun doSomeTest() {
+       val redisUri = URI.create(System.getProperty("redis.uri"))
+       // Do something against the redis instance
+    }
 }
 ```
 
