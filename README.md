@@ -37,6 +37,11 @@ class SomeIntegrationTest {
 }
 ```
 
+If running multiple tests within the same JVM, per default the same random port will be reused for each test instance
+, but a new redis instance will be created for each test instance.
+ To enforce use of a new random port for each test instance, 
+ the extension can be registered programatically with the `forceRandomPort`
+ constructor parameter set to true.
 
 ## How to test the software
 

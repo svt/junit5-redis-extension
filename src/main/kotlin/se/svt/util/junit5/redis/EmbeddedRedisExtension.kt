@@ -6,12 +6,16 @@ import org.junit.jupiter.api.extension.BeforeAllCallback
 import org.junit.jupiter.api.extension.ExtensionContext
 import redis.embedded.RedisServer
 
-class EmbeddedRedisExtension : BeforeAllCallback, AfterAllCallback {
+const val REDIS_URI_PROPERTY = "redis.uri"
+
+class EmbeddedRedisExtension(private val forceRandomPort: Boolean = false) : BeforeAllCallback, AfterAllCallback {
     lateinit var redisServer: RedisServer
 
     override fun beforeAll(context: ExtensionContext?) {
-        val port = FreePortFinder.findFreeLocalPort()
-        System.setProperty("redis.uri", "redis://localhost:$port")
+        val port =
+                if (forceRandomPort) FreePortFinder.findFreeLocalPort()
+                else findPortFromSystemProperty() ?: FreePortFinder.findFreeLocalPort()
+        System.setProperty(REDIS_URI_PROPERTY, "redis://localhost:$port")
         redisServer = RedisServer(port)
         redisServer.start()
     }
