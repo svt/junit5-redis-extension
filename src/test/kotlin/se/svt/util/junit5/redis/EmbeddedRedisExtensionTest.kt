@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2018 Sveriges Television AB
+//
+// SPDX-License-Identifier: Apache-2.0
+
 package se.svt.util.junit5.redis
 
 import me.alexpanov.net.FreePortFinder

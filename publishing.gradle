@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2018 Sveriges Television AB
+//
+// SPDX-License-Identifier: CC0-1.0
 
 def pomConfig = {
     licenses {
