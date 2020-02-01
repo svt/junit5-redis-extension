@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2018 Sveriges Television AB
+
+SPDX-License-Identifier: CC0-1.0
+-->
+
 # Guidance on how to contribute
 
 > All contributions to this project will be released under the Apache 2.0 License.
