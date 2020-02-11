@@ -1,12 +1,12 @@
 package se.svt.util.junit5.redis
 
+import java.net.URI
 import me.alexpanov.net.FreePortFinder
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import redis.clients.jedis.Jedis
-import java.net.URI
 
 class EmbeddedRedisExtensionTest {
 
