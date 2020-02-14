@@ -19,8 +19,9 @@ testImplementation 'se.svt.oss.junit5:junit5-redis-extension:X.Y.Z
 ```
 
 A standard junit5 extension that will start an embedded Redis server on a random port before all tests in a class
- is run and shut it down after all tests are run. System property `redis.uri` will be set to hold the uri to the 
- redis server, ie `redis://localhost:xyz`.
+ is run and shut it down after all tests are run. System property `embedded-redis.port` will be set to hold the port
+  used byt
+  the redis server.
 
 Example on usage in test
 ```
@@ -31,16 +32,16 @@ class SomeIntegrationTest {
 
     @Test
     fun doSomeTest() {
-       val redisUri = URI.create(System.getProperty("redis.uri"))
+       val redisUri = URI.create("redis://localhost:" + System.getProperty("embedded-redis.port"))
        // Do something against the redis instance
     }
 }
 ```
 
-If running multiple tests within the same JVM, per default the same random port will be reused for each test instance
-, but a new redis instance will be created for each test instance.
- To enforce use of a new random port for each test instance, 
- the extension can be registered programatically with the `forceRandomPort`
+If running multiple tests within the same JVM, a new redis instance using a new random port will be created for each
+ test
+ instance. To enforce use of the same port for each test instance, 
+ the extension can be registered programatically with the `reusePort`
  constructor parameter set to true.
 
 ## How to test the software

@@ -1,116 +1,127 @@
 package se.svt.util.junit5.redis
 
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.slot
+import io.mockk.verify
 import me.alexpanov.net.FreePortFinder
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtensionContext
 import redis.clients.jedis.Jedis
-import java.net.URI
 
 class EmbeddedRedisExtensionTest {
 
     @Nested
-    inner class BeforeAll {
+    inner class BeforeAllReusePort {
 
-        private val embeddedRedisExtension = EmbeddedRedisExtension()
+        private val store = mockk<ExtensionContext.Store>()
+
+        private val extensionContext = mockk<ExtensionContext>()
+
+        private val redisSlot = slot<EmbeddedRedisExtension.RedisWrapper>()
+
+        private val embeddedRedisExtension = EmbeddedRedisExtension(true)
+
+        @BeforeEach
+        fun setUp() {
+            every { extensionContext.getStore(any()) } returns store
+            every { store.put("redis", capture(redisSlot)) } just Runs
+        }
 
         @AfterEach
         fun tearDown() {
-            embeddedRedisExtension.afterAll(null)
+            verify { store.put("redis", any<EmbeddedRedisExtension.RedisWrapper>()) }
+            redisSlot.captured?.close()
         }
 
         @Test
-        fun `Redis uri is set in system property`() {
-            embeddedRedisExtension.beforeAll(null)
-            val redisUri = assertRedisUriSet()
-
-            assertThat(redisUri)
-                    .hasScheme("redis")
-                    .hasHost("localhost")
+        fun `Redis port is set in system property`() {
+            embeddedRedisExtension.beforeAll(extensionContext)
+            assertRedisPortSet()
         }
 
         @Test
         fun `Port from system property is used if exists`() {
             val port = FreePortFinder.findFreeLocalPort()
-            System.setProperty(REDIS_URI_PROPERTY, "redis://localhost:$port")
-            embeddedRedisExtension.beforeAll(null)
+            System.setProperty(REDIS_PORT_PROPERTY, port.toString())
+            embeddedRedisExtension.beforeAll(extensionContext)
 
-            val redisUri = assertRedisUriSet()
+            val actualPort = assertRedisPortSet()
 
-            assertThat(redisUri)
-                    .hasScheme("redis")
-                    .hasHost("localhost")
-                    .hasPort(port)
+            assertThat(actualPort)
+                    .isEqualTo(port)
         }
 
         @Test
         fun `Redis instance is started`() {
-            embeddedRedisExtension.beforeAll(null)
-            val redisUri = assertRedisUriSet()
-            pingRedis(redisUri)
+            embeddedRedisExtension.beforeAll(extensionContext)
+            val port = assertRedisPortSet()
+            pingRedis(port)
         }
     }
 
     @Nested
-    inner class BeforeAllForceRandomPort {
+    inner class BeforeAll {
 
-        private val embeddedRedisExtension = EmbeddedRedisExtension(true)
+        private val store = mockk<ExtensionContext.Store>()
+
+        private val extensionContext = mockk<ExtensionContext>()
+
+        private val redisSlot = slot<EmbeddedRedisExtension.RedisWrapper>()
+
+        private val embeddedRedisExtension = EmbeddedRedisExtension()
+
+        @BeforeEach
+        fun setUp() {
+            every { extensionContext.getStore(any()) } returns store
+            every { store.put("redis", capture(redisSlot)) } just Runs
+        }
 
         @AfterEach
         fun tearDown() {
-            embeddedRedisExtension.afterAll(null)
+            verify { store.put("redis", any<EmbeddedRedisExtension.RedisWrapper>()) }
+            redisSlot.captured?.close()
         }
 
         @Test
         fun `Port from system property is ignored`() {
             val port = FreePortFinder.findFreeLocalPort()
-            System.setProperty(REDIS_URI_PROPERTY, "redis://localhost:$port")
-            embeddedRedisExtension.beforeAll(null)
+            System.setProperty(REDIS_PORT_PROPERTY, "$port")
+            embeddedRedisExtension.beforeAll(extensionContext)
 
-            val redisUri = assertRedisUriSet()
+            val redisPort = assertRedisPortSet()
 
-            assertThat(redisUri)
-                    .hasScheme("redis")
-                    .hasHost("localhost")
-
-            assertThat(redisUri.port).isNotEqualTo(port)
+            assertThat(redisPort)
+                    .isNotEqualTo(port)
         }
 
         @Test
         fun `Redis instance is started`() {
-            embeddedRedisExtension.beforeAll(null)
-            val redisUri = assertRedisUriSet()
-            pingRedis(redisUri)
+            embeddedRedisExtension.beforeAll(extensionContext)
+            val port = assertRedisPortSet()
+            pingRedis(port)
         }
     }
 
-    @Nested
-    inner class AfterAll {
-
-        private val embeddedRedisExtension = EmbeddedRedisExtension()
-
-        @Test
-        fun `Redis is shut down`() {
-            embeddedRedisExtension.beforeAll(null)
-            embeddedRedisExtension.afterAll(null)
-            assertThat(embeddedRedisExtension.redisServer.isActive)
-                    .isFalse()
-        }
-    }
-
-    private fun pingRedis(redisUri: URI) {
-        Jedis(redisUri.host, redisUri.port).use { jedis ->
+    private fun pingRedis(port: Int) {
+        Jedis("localhost", port).use { jedis ->
             jedis.ping()
         }
     }
 
-    private fun assertRedisUriSet(): URI {
-        val redisUriStr = System.getProperty("redis.uri")
+    private fun assertRedisPortSet(): Int {
+        val redisPortStr = System.getProperty(REDIS_PORT_PROPERTY)
 
-        assertThat(redisUriStr)
+        assertThat(redisPortStr)
                 .isNotNull()
+                .matches("[0-9]+")
 
-        return URI.create(redisUriStr)
+        return redisPortStr.toInt()
     }
 }
