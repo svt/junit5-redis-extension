@@ -61,6 +61,7 @@ If running multiple tests within the same JVM, a new redis instance using a new 
 Copyright 2018 Sveriges Television AB
 
 This software is released under the Apache 2.0 License.
+Properties and various configuration files are released under CC0 1.0 Universal (Public Domain).
 
 ## Primary Maintainers
 

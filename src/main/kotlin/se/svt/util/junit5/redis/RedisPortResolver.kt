@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2018 Sveriges Television AB
+//
+// SPDX-License-Identifier: Apache-2.0
+
 package se.svt.util.junit5.redis
 
 private val redisPortRegex = "([0-9]+)".toRegex()
