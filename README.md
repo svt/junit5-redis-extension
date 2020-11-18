@@ -1,3 +1,5 @@
+[![REUSE status](https://api.reuse.software/badge/github.com/SVT/junit5-redis-extension)](https://api.reuse.software/info/github.com/SVT/junit5-redis-extension)
+
 # JUnit5 Redis Extension
 
 **Description**:  A JUnit5 extension to setup embedded Redis for tests.
@@ -54,13 +56,14 @@ If running multiple tests within the same JVM, a new redis instance using a new 
 
 1. Make sure you are on master branch and that everything is pushed to master
 2. ./gradlew release to tag a new version (uses Axion release plugin - needs ssh key for repo)
-3.  ./gradlew bintrayUpload to upload to repo - needs BINTRAY_KEY and BINTRAY_USER environment variables
+3.  ./gradlew bintrayUpload to upload to repo - needs BINTRAY_API_KEY and BINTRAY_USER environment variables
 
 ## License
 
 Copyright 2018 Sveriges Television AB
 
-This software is released under the Apache 2.0 License.
+This software is released under the Apache 2.0 License.  
+Properties and various configuration files are released under CC0 1.0 Universal (Public Domain).
 
 ## Primary Maintainers
 
