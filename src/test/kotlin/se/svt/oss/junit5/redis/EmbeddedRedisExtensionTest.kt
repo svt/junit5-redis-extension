@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-package se.svt.util.junit5.redis
+package se.svt.oss.junit5.redis
 
 import io.mockk.Runs
 import io.mockk.every
@@ -41,7 +41,7 @@ class EmbeddedRedisExtensionTest {
         @AfterEach
         fun tearDown() {
             verify { store.put("redis", any<EmbeddedRedisExtension.RedisWrapper>()) }
-            redisSlot.captured?.close()
+            redisSlot.captured.close()
         }
 
         @Test
@@ -59,7 +59,7 @@ class EmbeddedRedisExtensionTest {
             val actualPort = assertRedisPortSet()
 
             assertThat(actualPort)
-                    .isEqualTo(port)
+                .isEqualTo(port)
         }
 
         @Test
@@ -90,7 +90,7 @@ class EmbeddedRedisExtensionTest {
         @AfterEach
         fun tearDown() {
             verify { store.put("redis", any<EmbeddedRedisExtension.RedisWrapper>()) }
-            redisSlot.captured?.close()
+            redisSlot.captured.close()
         }
 
         @Test
@@ -102,7 +102,7 @@ class EmbeddedRedisExtensionTest {
             val redisPort = assertRedisPortSet()
 
             assertThat(redisPort)
-                    .isNotEqualTo(port)
+                .isNotEqualTo(port)
         }
 
         @Test
@@ -123,8 +123,8 @@ class EmbeddedRedisExtensionTest {
         val redisPortStr = System.getProperty(REDIS_PORT_PROPERTY)
 
         assertThat(redisPortStr)
-                .isNotNull()
-                .matches("[0-9]+")
+            .isNotNull()
+            .matches("[0-9]+")
 
         return redisPortStr.toInt()
     }

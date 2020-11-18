@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-package se.svt.util.junit5.redis
+package se.svt.oss.junit5.redis
 
 private val redisPortRegex = "([0-9]+)".toRegex()
 

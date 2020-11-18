@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-package se.svt.util.junit5.redis
+package se.svt.oss.junit5.redis
 
 import me.alexpanov.net.FreePortFinder
 import org.junit.jupiter.api.extension.BeforeAllCallback
@@ -19,18 +19,22 @@ class EmbeddedRedisExtension(private val reusePort: Boolean = false) : BeforeAll
 
     override fun beforeAll(context: ExtensionContext) {
         val port =
-                if (!reusePort) FreePortFinder.findFreeLocalPort()
-                else findPortFromSystemProperty() ?: FreePortFinder.findFreeLocalPort()
+            if (!reusePort) FreePortFinder.findFreeLocalPort()
+            else findPortFromSystemProperty() ?: FreePortFinder.findFreeLocalPort()
         System.setProperty(REDIS_PORT_PROPERTY, port.toString())
         redisServer = RedisServer(port)
         redisServer.start()
 
         val wrapper = RedisWrapper(redisServer)
         context.getStore(Namespace.create(EmbeddedRedisExtension::class.java))
-                .put("redis", wrapper)
-        Runtime.getRuntime().addShutdownHook(Thread(Runnable {
-            wrapper.close()
-        }))
+            .put("redis", wrapper)
+        Runtime.getRuntime().addShutdownHook(
+            Thread(
+                Runnable {
+                    wrapper.close()
+                }
+            )
+        )
     }
 
     class RedisWrapper(private val redis: RedisServer) : ExtensionContext.Store.CloseableResource {
