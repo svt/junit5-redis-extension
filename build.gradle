@@ -3,16 +3,20 @@ plugins {
     id 'pl.allegro.tech.build.axion-release' version '1.12.1'
     id "org.jetbrains.kotlin.jvm" version "1.4.10"
     id "com.github.ben-manes.versions" version "0.36.0"
-    id "com.jfrog.bintray" version "1.8.5"
+    id "java-library"
+    id "maven-publish"
+    id "signing"
 }
 
-group = 'se.svt.oss.junit5'
-project.version=scmVersion.version
+ext {
+    PUBLISH_GROUP_ID = 'se.svt.oss.junit5'
+    PUBLISH_VERSION = scmVersion.version
+    PUBLISH_ARTIFACT_ID = 'junit5-redis-extension'
+}
 
-apply plugin: 'kotlin'
-apply plugin: 'maven-publish'
-apply plugin: 'java-library'
-apply from: 'bintray.gradle'
+group = PUBLISH_GROUP_ID
+project.version= PUBLISH_VERSION
+
 apply from: 'publishing.gradle'
 
 sourceCompatibility = 11
@@ -47,7 +51,6 @@ task testJar(type: Jar, dependsOn: testClasses) {
 publish.dependsOn check
 
 repositories {
-    jcenter()
     mavenCentral()
 }
 
