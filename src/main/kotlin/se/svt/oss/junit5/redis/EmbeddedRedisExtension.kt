@@ -9,20 +9,25 @@ import org.junit.jupiter.api.extension.BeforeAllCallback
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace
 import redis.embedded.RedisServer
+import java.io.File
 
 const val REDIS_URI_PROPERTY = "redis.uri"
 const val REDIS_PORT_PROPERTY = "embedded-redis.port"
 
 class EmbeddedRedisExtension(private val reusePort: Boolean = false) : BeforeAllCallback {
-
     lateinit var redisServer: RedisServer
-
+    val redisPath: String? = System.getenv("REDIS_SERVER")
     override fun beforeAll(context: ExtensionContext) {
         val port =
             if (!reusePort) FreePortFinder.findFreeLocalPort()
             else findPortFromSystemProperty() ?: FreePortFinder.findFreeLocalPort()
         System.setProperty(REDIS_PORT_PROPERTY, port.toString())
-        redisServer = RedisServer(port)
+        if (redisPath != null) {
+            redisServer = RedisServer(File(redisPath), port)
+        } else {
+            redisServer = RedisServer(port)
+        }
+
         redisServer.start()
 
         val wrapper = RedisWrapper(redisServer)
