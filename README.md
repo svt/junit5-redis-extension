@@ -51,7 +51,10 @@ If running multiple tests within the same JVM, a new redis instance using a new 
 ```./gradlew test```
 
 ----
-
+## Configuration
+By default, the package uses redis 6.0.5, provided by the [embedded-redis package](https://github.com/signalapp/embedded-redis).
+If you wish to use another redis version, you can do so by setting the environment variable ``REDIS_SERVER``
+to the path to your redis-server executable, which the package will then use instead, by providing the path to the `RedisServer` constructor.
 ## License
 
 Copyright 2018 Sveriges Television AB
