@@ -16,9 +16,15 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.extension.ExtensionContext
 import redis.clients.jedis.Jedis
+import uk.org.webcompere.systemstubs.jupiter.SystemStubsExtension
+import uk.org.webcompere.systemstubs.properties.SystemProperties
 
+@ExtendWith(
+    SystemStubsExtension::class
+)
 class EmbeddedRedisExtensionTest {
 
     @Nested
@@ -51,9 +57,9 @@ class EmbeddedRedisExtensionTest {
         }
 
         @Test
-        fun `Port from system property is used if exists`() {
+        fun `Port from system property is used if exists`(prop: SystemProperties) {
             val port = FreePortFinder.findFreeLocalPort()
-            System.setProperty(REDIS_PORT_PROPERTY, port.toString())
+            prop.set(REDIS_PORT_PROPERTY, port.toString())
             embeddedRedisExtension.beforeAll(extensionContext)
 
             val actualPort = assertRedisPortSet()
@@ -94,9 +100,9 @@ class EmbeddedRedisExtensionTest {
         }
 
         @Test
-        fun `Port from system property is ignored`() {
+        fun `Port from system property is ignored`(prop: SystemProperties) {
             val port = FreePortFinder.findFreeLocalPort()
-            System.setProperty(REDIS_PORT_PROPERTY, "$port")
+            prop.set(REDIS_PORT_PROPERTY, "$port")
             embeddedRedisExtension.beforeAll(extensionContext)
 
             val redisPort = assertRedisPortSet()

@@ -13,24 +13,20 @@ import java.io.File
 
 const val REDIS_URI_PROPERTY = "redis.uri"
 const val REDIS_PORT_PROPERTY = "embedded-redis.port"
+const val REDIS_SERVER_PROPERTY = "REDIS_SERVER"
 
 class EmbeddedRedisExtension(private val reusePort: Boolean = false) : BeforeAllCallback {
-    lateinit var redisServer: RedisServer
-    val redisPath: String? = System.getenv("REDIS_SERVER")
     override fun beforeAll(context: ExtensionContext) {
-        val port =
-            if (!reusePort) FreePortFinder.findFreeLocalPort()
-            else findPortFromSystemProperty() ?: FreePortFinder.findFreeLocalPort()
+        val port = port()
+
         System.setProperty(REDIS_PORT_PROPERTY, port.toString())
-        if (redisPath != null) {
-            redisServer = RedisServer(File(redisPath), port)
-        } else {
-            redisServer = RedisServer(port)
-        }
+
+        val redisServer = redisServer(port)
 
         redisServer.start()
 
         val wrapper = RedisWrapper(redisServer)
+
         context.getStore(Namespace.create(EmbeddedRedisExtension::class.java))
             .put("redis", wrapper)
         Runtime.getRuntime().addShutdownHook(
@@ -40,6 +36,16 @@ class EmbeddedRedisExtension(private val reusePort: Boolean = false) : BeforeAll
                 }
             )
         )
+    }
+
+    private fun port() = if (!reusePort) FreePortFinder.findFreeLocalPort()
+    else findPortFromSystemProperty() ?: FreePortFinder.findFreeLocalPort()
+
+    private fun redisServer(port: Int): RedisServer {
+        return when (val redisPath = findRedisPathFromSystemProperty()) {
+            null -> RedisServer(port)
+            else -> RedisServer(File(redisPath), port)
+        }
     }
 
     class RedisWrapper(private val redis: RedisServer) : ExtensionContext.Store.CloseableResource {

@@ -32,6 +32,7 @@ dependencies {
     api("org.signal:embedded-redis:0.8.0")
     api("org.junit.jupiter:junit-jupiter-api:5.7.2")
     implementation("org.junit.jupiter:junit-jupiter-engine:5.7.2")
+    testImplementation("uk.org.webcompere:system-stubs-jupiter:1.2.0")
     testImplementation("redis.clients:jedis:3.7.0")
     testImplementation("org.assertj:assertj-core:3.20.2")
     testImplementation("io.mockk:mockk:1.12.0")
