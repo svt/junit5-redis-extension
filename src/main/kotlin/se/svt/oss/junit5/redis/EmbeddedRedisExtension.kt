@@ -9,23 +9,24 @@ import org.junit.jupiter.api.extension.BeforeAllCallback
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace
 import redis.embedded.RedisServer
+import java.io.File
 
 const val REDIS_URI_PROPERTY = "redis.uri"
 const val REDIS_PORT_PROPERTY = "embedded-redis.port"
+const val REDIS_SERVER_PROPERTY = "REDIS_SERVER"
 
 class EmbeddedRedisExtension(private val reusePort: Boolean = false) : BeforeAllCallback {
-
-    lateinit var redisServer: RedisServer
-
     override fun beforeAll(context: ExtensionContext) {
-        val port =
-            if (!reusePort) FreePortFinder.findFreeLocalPort()
-            else findPortFromSystemProperty() ?: FreePortFinder.findFreeLocalPort()
+        val port = port()
+
         System.setProperty(REDIS_PORT_PROPERTY, port.toString())
-        redisServer = RedisServer(port)
+
+        val redisServer = redisServer(port)
+
         redisServer.start()
 
         val wrapper = RedisWrapper(redisServer)
+
         context.getStore(Namespace.create(EmbeddedRedisExtension::class.java))
             .put("redis", wrapper)
         Runtime.getRuntime().addShutdownHook(
@@ -35,6 +36,19 @@ class EmbeddedRedisExtension(private val reusePort: Boolean = false) : BeforeAll
                 }
             )
         )
+    }
+
+    private fun port() = if (!reusePort) FreePortFinder.findFreeLocalPort()
+    else findPortFromSystemProperty() ?: FreePortFinder.findFreeLocalPort()
+
+    private fun redisServer(port: Int): RedisServer {
+        return if (findRedisPathFromEnv() != null) {
+            val redisEnvPath = findRedisPathFromEnv()
+            RedisServer(File(redisEnvPath), port)
+        } else when (val redisPath = findRedisPathFromSystemProperty()) {
+            null -> RedisServer(port)
+            else -> RedisServer(File(redisPath), port)
+        }
     }
 
     class RedisWrapper(private val redis: RedisServer) : ExtensionContext.Store.CloseableResource {
