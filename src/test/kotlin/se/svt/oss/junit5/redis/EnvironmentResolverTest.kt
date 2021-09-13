@@ -16,7 +16,7 @@ import uk.org.webcompere.systemstubs.jupiter.SystemStubsExtension
 class EnvironmentResolverTest {
 
     @Test
-    fun `returns null if system property not set`(env: EnvironmentVariables) {
+    fun `returns null if env property not set`(env: EnvironmentVariables) {
         env.execute {
             env.set(REDIS_SERVER_PROPERTY, null)
             assertThat(findRedisPathFromEnv()).isNull()
@@ -24,14 +24,14 @@ class EnvironmentResolverTest {
     }
 
     @Test
-    fun `returns null if server path exists but is not a file`(env: EnvironmentVariables) {
+    fun `returns null if env server env path exists but is not a file`(env: EnvironmentVariables) {
         env.set(REDIS_SERVER_PROPERTY, "abd123").execute {
             assertThat(findRedisPathFromEnv()).isNull()
         }
     }
 
     @Test
-    fun `returns path from redis server property if a valid file path set`(env: EnvironmentVariables) {
+    fun `returns path from redis server env if a valid file path set`(env: EnvironmentVariables) {
         val path = createTempFile().absolutePath
         env.set(REDIS_SERVER_PROPERTY, path).execute {
             assertThat(findRedisPathFromEnv()).isEqualTo(path)

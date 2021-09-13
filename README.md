@@ -56,7 +56,7 @@ To enforce use of the same port for each test instance, the extension can be reg
 By default, the package uses Redis 6.0.5, as provided by the [embedded-redis package](https://github.com/signalapp/embedded-redis).
 If you wish to use another Redis version, you can do so by setting the environment variable ``REDIS_SERVER``
 to the path to your Redis-server executable, which the package will then use instead, by providing the path to the `RedisServer` constructor.
-
+t 
 ## License
 
 Copyright 2018 Sveriges Television AB
