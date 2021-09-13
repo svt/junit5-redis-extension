@@ -59,13 +59,14 @@ class EmbeddedRedisExtensionTest {
         @Test
         fun `Port from system property is used if exists`(prop: SystemProperties) {
             val port = FreePortFinder.findFreeLocalPort()
-            prop.set(REDIS_PORT_PROPERTY, port.toString())
-            embeddedRedisExtension.beforeAll(extensionContext)
+            prop.set(REDIS_PORT_PROPERTY, port.toString()).execute {
+                embeddedRedisExtension.beforeAll(extensionContext)
 
-            val actualPort = assertRedisPortSet()
+                val actualPort = assertRedisPortSet()
 
-            assertThat(actualPort)
-                .isEqualTo(port)
+                assertThat(actualPort)
+                    .isEqualTo(port)
+            }
         }
 
         @Test
@@ -102,13 +103,14 @@ class EmbeddedRedisExtensionTest {
         @Test
         fun `Port from system property is ignored`(prop: SystemProperties) {
             val port = FreePortFinder.findFreeLocalPort()
-            prop.set(REDIS_PORT_PROPERTY, "$port")
-            embeddedRedisExtension.beforeAll(extensionContext)
+            prop.set(REDIS_PORT_PROPERTY, "$port").execute {
+                embeddedRedisExtension.beforeAll(extensionContext)
 
-            val redisPort = assertRedisPortSet()
+                val redisPort = assertRedisPortSet()
 
-            assertThat(redisPort)
-                .isNotEqualTo(port)
+                assertThat(redisPort)
+                    .isNotEqualTo(port)
+            }
         }
 
         @Test

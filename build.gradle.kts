@@ -29,7 +29,7 @@ dependencies {
 
     implementation(kotlin("reflect", "1.5.21"))
     implementation("me.alexpanov:free-port-finder:1.1.1")
-    api("org.signal:embedded-redis:0.8.0")
+    api("org.signal:embedded-redis:0.8.1")
     api("org.junit.jupiter:junit-jupiter-api:5.7.2")
     implementation("org.junit.jupiter:junit-jupiter-engine:5.7.2")
     testImplementation("uk.org.webcompere:system-stubs-jupiter:1.2.0")

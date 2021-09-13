@@ -42,7 +42,10 @@ class EmbeddedRedisExtension(private val reusePort: Boolean = false) : BeforeAll
     else findPortFromSystemProperty() ?: FreePortFinder.findFreeLocalPort()
 
     private fun redisServer(port: Int): RedisServer {
-        return when (val redisPath = findRedisPathFromSystemProperty()) {
+        return if (findRedisPathFromEnv() != null) {
+            val redisEnvPath = findRedisPathFromEnv()
+            RedisServer(File(redisEnvPath), port)
+        } else when (val redisPath = findRedisPathFromSystemProperty()) {
             null -> RedisServer(port)
             else -> RedisServer(File(redisPath), port)
         }
