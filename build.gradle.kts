@@ -14,6 +14,10 @@ plugins {
     id("se.svt.oss.gradle-yapp-publisher-plugin") version "0.1.15"
 }
 
+
+scmVersion.tag.prefix = "release"
+scmVersion.tag.versionSeparator = "-"
+
 group = "se.svt.oss"
 project.version = scmVersion.version
 
