@@ -9,10 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Configurable Redis exe path possible
-- Java 11 base line 
-- Use the [Signal fork](https://github.com/signalapp/embedded-redis) of embedded Redis 
+- Java 11 base line
+- Use the [Signal fork](https://github.com/signalapp/embedded-redis) of embedded Redis
 - Use the se.svt.oss namespace (without the junit5-postfix)
-- Use YAPP Publisher plugin 
+- Use YAPP Publisher plugin
 - Various version bumps
 
 ### Removed
