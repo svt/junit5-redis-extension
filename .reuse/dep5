@@ -36,6 +36,10 @@ Files: *.properties
 Copyright: 2020 Sveriges Television AB
 License: CC0-1.0
 
+Files: *.adoc
+Copyright: 2020 Sveriges Television AB
+License: CC0-1.0
+
 # Third-party files.
 
 
