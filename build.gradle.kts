@@ -49,5 +49,5 @@ kotlin {
 
 tasks.wrapper {
     distributionType = Wrapper.DistributionType.ALL
-    gradleVersion = "7.2"
+    gradleVersion = "7.4.2"
 }
