@@ -2,7 +2,7 @@
 # JUnit5 Redis Extension
 
 ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/svt/junit5-redis-extension)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
 [![REUSE status](https://api.reuse.software/badge/github.com/svt/junit5-redis-extension)](https://api.reuse.software/info/github.com/svt/junit5-redis-extension)
 
 A JUnit5 extension to set up embedded Redis for tests.
