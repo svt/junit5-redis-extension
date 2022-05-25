@@ -2,6 +2,7 @@ generated-java
 *.iml
 **/target/
 
+report/
 coverage-error.log
 
 **/build
